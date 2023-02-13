@@ -2,6 +2,9 @@
   "name": "universe",
   "packageManager": "yarn@3.4.1",
   "private": true,
+  "scripts": {
+    "check:install": "yarn dlx @yarnpkg/doctor@3.1.4 ."
+  },
   "workspaces": [
     "packages/*"
   ]

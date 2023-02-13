@@ -1,7 +1,7 @@
 node_modules/
 build/
 *.config
-.tsbuildinfo
+*.tsbuildinfo
 
 .yarn/*
 !.yarn/patches

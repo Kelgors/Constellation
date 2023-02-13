@@ -1,0 +1,54 @@
+version: '3'
+services:
+  antigona:
+    image: constellation/system:nightly
+    environment:
+      - CONFIG=/config.json
+    volumes:
+      - ./config/antigona.json:/config.json:ro
+    depends_on:
+      - pericles
+      - mercurius
+    networks:
+      galbr:
+        ipv4_address: 10.5.0.20
+  pericles:
+    image: constellation/system:nightly
+    volumes:
+      - ./config/pericles.json:/app/config.json:ro
+    networks:
+      galbr:
+        ipv4_address: 10.5.0.21
+  mercurius:
+    image: constellation/system:nightly
+    volumes:
+      - ./config/mercurius.json:/app/config.json:ro
+    networks:
+      galbr:
+        ipv4_address: 10.5.0.22
+    depends_on:
+      - casius2
+  casius1:
+    image: constellation/system:nightly
+    volumes:
+      - ./config/casius_i.json:/app/config.json:ro
+    networks:
+      galbr:
+        ipv4_address: 10.5.0.25
+    depends_on:
+      - pericles
+      - casius2
+  casius2:
+    image: constellation/system:nightly
+    volumes:
+      - ./config/casius_ii.json:/app/config.json:ro
+    networks:
+      galbr:
+        ipv4_address: 10.5.0.26
+networks:
+  galbr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1

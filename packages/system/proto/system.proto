@@ -4,7 +4,7 @@ service SystemServer {
     rpc Ping(Empty) returns (Empty) {};
     rpc SendChatMessage(ChatMessage) returns (Empty) {}
 
-    rpc OpenJumpgate(JumpgateOpening) returns (JumpgateOpeningResponse) {}
+    rpc OpenJumpgate(SystemServerInfo) returns (JumpgateInfo) {}
 }
 message Empty {}
 
@@ -14,12 +14,18 @@ message ChatMessage {
     uint64 timestamp = 3;
 }
 
-message JumpgateOpening {
-    string name = 1;
-    string ip = 2;
-    uint32 port = 3;
+message SystemServerInfo {
+    string ip = 1;
+    uint32 port = 2;
+    string name = 3;
 }
-message JumpgateOpeningResponse {
-    bool accepted = 1;
-    optional JumpgateOpening info = 2;
+enum JumpgateStatus {
+    Opened = 0;
+    Closed = 1;
+    Refused = 2;
+}
+
+message JumpgateInfo {
+    JumpgateStatus status = 1;
+    SystemServerInfo info = 2;
 }

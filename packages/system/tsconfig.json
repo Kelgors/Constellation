@@ -1,20 +1,18 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./build",
-    "baseUrl": ".",
-    "experimentalDecorators": true,
-    
-    
-    "lib": [
-      "es2022"
-    ],
-    "module": "commonjs",
+    "baseUrl": "./src",
     "target": "es2022",
-    "strict": false,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
+    "lib": [ "es2022" ],
+    "module": "CommonJS",
+    "incremental": true,
+    "noEmit": false,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "tsBuildInfoFile": ".tsbuildinfo",
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node"
-  }
+  },
+  "exclude": ["**/node_modules", "**/.*/", "build"],
+  "include": ["**/*.js", "**/*.ts", "**/*.tsx"]
 }

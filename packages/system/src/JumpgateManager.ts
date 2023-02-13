@@ -1,18 +1,26 @@
 import * as grpc from '@grpc/grpc-js';
-import { JumpgateOpeningResponse } from './proto/system';
+import { SystemConfiguration } from './Configuration';
+import { Empty, JumpgateInfo, JumpgateStatus } from './proto/system';
 import { SystemServerClient } from './proto/system.grpc-client';
 
 export default class JumpgateManager {
   private _activeSystemConnections = new Map<string, SystemServerClient>();
 
-  ip: string;
-  port: number;
-  name: string;
+  configuration: SystemConfiguration;
 
-  constructor(ip: string, port: number, name: string) {
-    this.ip = ip;
-    this.port = port;
-    this.name = name;
+  constructor(configuration: SystemConfiguration) {
+    this.configuration = configuration;
+    setInterval(() => {
+      console.log(`%o`, [...this._activeSystemConnections.keys()]);
+    }, 5000);
+  }
+
+  async start() {
+    return Promise.allSettled(
+      this.configuration.jumpgates.map(({ ip, port }) =>
+        this.connect(`${ip}:${port}`).catch(() => console.warn(`Unable to connect to ${ip}:${port}`))
+      )
+    );
   }
 
   async tryConnect(target: string): Promise<SystemServerClient | null> {
@@ -24,46 +32,57 @@ export default class JumpgateManager {
     if (this._activeSystemConnections.has(target)) {
       client = this._activeSystemConnections.get(target);
       try {
+        if (!client) throw new Error('InconsistentData(ActiveSystemConnections)');
         await this._ping(client);
         return client;
-      } catch (err) {}
+      } catch (err) {
+        console.log('Removing client %s', target);
+        this._activeSystemConnections.delete(target);
+        throw err;
+      }
     }
     client = new SystemServerClient(target, grpc.ChannelCredentials.createInsecure(), {}, {});
     this._activeSystemConnections.set(target, client);
 
     try {
       console.log('Opening jumpgate to %s', target);
-      const { accepted } = await this._openJumpgate(client);
-      if (!accepted) {
+      const jumpgateInfo = await this._openJumpgate(client);
+      if (jumpgateInfo.status === JumpgateStatus.Closed) {
+        console.log('JumpgateOpeningError(closed)');
+        throw new Error('JumpgateOpeningError(closed)');
+      }
+      if (jumpgateInfo.status === JumpgateStatus.Refused) {
+        console.log('JumpgateOpeningError(refused)');
         throw new Error('JumpgateOpeningError(refused)');
       }
     } catch (err) {
       console.log('Removing client %s', target);
       this._activeSystemConnections.delete(target);
+      console.dir(err);
       throw err;
     }
     return client;
   }
 
-  private async _ping(client: SystemServerClient): Promise<JumpgateOpeningResponse> {
+  private async _ping(client: SystemServerClient): Promise<Empty> {
     return new Promise(function (resolve, reject) {
       client.ping({}, (err) => {
         if (err) {
           reject(err);
         } else {
           console.log('Pong');
-          resolve(undefined);
+          resolve({});
         }
       });
     });
   }
 
-  private async _openJumpgate(client: SystemServerClient): Promise<JumpgateOpeningResponse> {
-    const { ip, port, name } = this;
+  private async _openJumpgate(client: SystemServerClient): Promise<JumpgateInfo> {
+    const { ip, port, name } = this.configuration;
     return new Promise(function (resolve, reject) {
       client.openJumpgate({ ip, port, name }, (err, response) => {
-        if (err || !response.accepted) {
-          reject(err);
+        if (err || response?.status !== JumpgateStatus.Opened) {
+          reject(err || response);
         } else {
           resolve(response);
         }

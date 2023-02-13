@@ -6,8 +6,8 @@
 import { SystemServer } from "./system";
 import type { BinaryWriteOptions } from "@protobuf-ts/runtime";
 import type { BinaryReadOptions } from "@protobuf-ts/runtime";
-import type { JumpgateOpeningResponse } from "./system";
-import type { JumpgateOpening } from "./system";
+import type { JumpgateInfo } from "./system";
+import type { SystemServerInfo } from "./system";
 import type { ChatMessage } from "./system";
 import type { Empty } from "./system";
 import * as grpc from "@grpc/grpc-js";
@@ -30,12 +30,12 @@ export interface ISystemServerClient {
     sendChatMessage(input: ChatMessage, options: grpc.CallOptions, callback: (err: grpc.ServiceError | null, value?: Empty) => void): grpc.ClientUnaryCall;
     sendChatMessage(input: ChatMessage, callback: (err: grpc.ServiceError | null, value?: Empty) => void): grpc.ClientUnaryCall;
     /**
-     * @generated from protobuf rpc: OpenJumpgate(JumpgateOpening) returns (JumpgateOpeningResponse);
+     * @generated from protobuf rpc: OpenJumpgate(SystemServerInfo) returns (JumpgateInfo);
      */
-    openJumpgate(input: JumpgateOpening, metadata: grpc.Metadata, options: grpc.CallOptions, callback: (err: grpc.ServiceError | null, value?: JumpgateOpeningResponse) => void): grpc.ClientUnaryCall;
-    openJumpgate(input: JumpgateOpening, metadata: grpc.Metadata, callback: (err: grpc.ServiceError | null, value?: JumpgateOpeningResponse) => void): grpc.ClientUnaryCall;
-    openJumpgate(input: JumpgateOpening, options: grpc.CallOptions, callback: (err: grpc.ServiceError | null, value?: JumpgateOpeningResponse) => void): grpc.ClientUnaryCall;
-    openJumpgate(input: JumpgateOpening, callback: (err: grpc.ServiceError | null, value?: JumpgateOpeningResponse) => void): grpc.ClientUnaryCall;
+    openJumpgate(input: SystemServerInfo, metadata: grpc.Metadata, options: grpc.CallOptions, callback: (err: grpc.ServiceError | null, value?: JumpgateInfo) => void): grpc.ClientUnaryCall;
+    openJumpgate(input: SystemServerInfo, metadata: grpc.Metadata, callback: (err: grpc.ServiceError | null, value?: JumpgateInfo) => void): grpc.ClientUnaryCall;
+    openJumpgate(input: SystemServerInfo, options: grpc.CallOptions, callback: (err: grpc.ServiceError | null, value?: JumpgateInfo) => void): grpc.ClientUnaryCall;
+    openJumpgate(input: SystemServerInfo, callback: (err: grpc.ServiceError | null, value?: JumpgateInfo) => void): grpc.ClientUnaryCall;
 }
 /**
  * @generated from protobuf service SystemServer
@@ -61,10 +61,10 @@ export class SystemServerClient extends grpc.Client implements ISystemServerClie
         return this.makeUnaryRequest<ChatMessage, Empty>(`/${SystemServer.typeName}/${method.name}`, (value: ChatMessage): Buffer => Buffer.from(method.I.toBinary(value, this._binaryOptions)), (value: Buffer): Empty => method.O.fromBinary(value, this._binaryOptions), input, (metadata as any), (options as any), (callback as any));
     }
     /**
-     * @generated from protobuf rpc: OpenJumpgate(JumpgateOpening) returns (JumpgateOpeningResponse);
+     * @generated from protobuf rpc: OpenJumpgate(SystemServerInfo) returns (JumpgateInfo);
      */
-    openJumpgate(input: JumpgateOpening, metadata: grpc.Metadata | grpc.CallOptions | ((err: grpc.ServiceError | null, value?: JumpgateOpeningResponse) => void), options?: grpc.CallOptions | ((err: grpc.ServiceError | null, value?: JumpgateOpeningResponse) => void), callback?: ((err: grpc.ServiceError | null, value?: JumpgateOpeningResponse) => void)): grpc.ClientUnaryCall {
+    openJumpgate(input: SystemServerInfo, metadata: grpc.Metadata | grpc.CallOptions | ((err: grpc.ServiceError | null, value?: JumpgateInfo) => void), options?: grpc.CallOptions | ((err: grpc.ServiceError | null, value?: JumpgateInfo) => void), callback?: ((err: grpc.ServiceError | null, value?: JumpgateInfo) => void)): grpc.ClientUnaryCall {
         const method = SystemServer.methods[2];
-        return this.makeUnaryRequest<JumpgateOpening, JumpgateOpeningResponse>(`/${SystemServer.typeName}/${method.name}`, (value: JumpgateOpening): Buffer => Buffer.from(method.I.toBinary(value, this._binaryOptions)), (value: Buffer): JumpgateOpeningResponse => method.O.fromBinary(value, this._binaryOptions), input, (metadata as any), (options as any), (callback as any));
+        return this.makeUnaryRequest<SystemServerInfo, JumpgateInfo>(`/${SystemServer.typeName}/${method.name}`, (value: SystemServerInfo): Buffer => Buffer.from(method.I.toBinary(value, this._binaryOptions)), (value: Buffer): JumpgateInfo => method.O.fromBinary(value, this._binaryOptions), input, (metadata as any), (options as any), (callback as any));
     }
 }

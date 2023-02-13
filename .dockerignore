@@ -1,0 +1,27 @@
+node_modules
+**/node_modules
+**/build/
+**/.*
+
+# Yarn
+!.yarnrc.yml
+!.yarn/plugins
+!.yarn/releases
+
+# Used when building
+!.eslintrc.base.json
+!.prettierignore
+!.prettierrc.js
+!.eslintignore
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.*.yml
+docker-compose.yml
+docker
+
+# Log files
+logs
+*.log
+*.gz

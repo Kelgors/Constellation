@@ -3,8 +3,8 @@
 // @generated from protobuf file "system.proto" (syntax proto3)
 // tslint:disable
 // @ts-nocheck
-import { JumpgateOpeningResponse } from "./system";
-import { JumpgateOpening } from "./system";
+import { JumpgateInfo } from "./system";
+import { SystemServerInfo } from "./system";
 import { ChatMessage } from "./system";
 import { Empty } from "./system";
 import { ServerCallContext } from "@protobuf-ts/runtime-rpc";
@@ -21,7 +21,7 @@ export interface ISystemServer<T = ServerCallContext> {
      */
     sendChatMessage(request: ChatMessage, context: T): Promise<Empty>;
     /**
-     * @generated from protobuf rpc: OpenJumpgate(JumpgateOpening) returns (JumpgateOpeningResponse);
+     * @generated from protobuf rpc: OpenJumpgate(SystemServerInfo) returns (JumpgateInfo);
      */
-    openJumpgate(request: JumpgateOpening, context: T): Promise<JumpgateOpeningResponse>;
+    openJumpgate(request: SystemServerInfo, context: T): Promise<JumpgateInfo>;
 }
